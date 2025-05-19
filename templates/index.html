@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero section">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+</section>
+
+<section class="hero"></section>
+
+<section class="destaque-beneficios">
+    <div class="container">
+        <h2>Bem-vindo ao Vértice Hub</h2>
+        <p>Ecossistema de negócios, coworking e aceleradora para quem quer inovar, crescer e transformar ideias em realidade.</p>
+        <div class="beneficios-lista">
+            <div class="beneficio-item beneficio-networking">
+                <div class="beneficio-img">
+                    <img src="/static/imagens/1.png" alt="Networking de Alto Nível">
+                </div>
+                <h3>Networking de Alto Nível</h3>
+                <p>Conecte-se com empreendedores, mentores e investidores.</p>
+            </div>
+            <div class="beneficio-item beneficio-networking">
+                <div class="beneficio-img">
+                    <img src="/static/imagens/2.png" alt="Networking de Alto Nível">
+                </div>
+                <h3>Ecossistema Empresarial</h3>
+                <p>Faça parte de um grupo de empresários focados em negócios e crescimento.</p>
+            </div>
+            <div class="beneficio-item beneficio-networking">
+                <div class="beneficio-img">
+                    <img src="/static/imagens/3.png" alt="Networking de Alto Nível">
+                </div>
+                <h3>Espaço Inspirador</h3>
+                <p>Ambiente moderno e flexível para você crescer.</p>
+            </div>
+            <div class="beneficio-item beneficio-networking">
+                <div class="beneficio-img">
+                    <img src="/static/imagens/4.png" alt="Networking de Alto Nível">
+                </div>
+                <h3>Eventos & Workshops</h3>
+                <p>Participe de eventos, workshops e oportunidades exclusivas.</p>
+            </div>
+        </div>
+    </div>
+    <a href="{{ url_for('cadastro_empresa') }}" class="cta-btn cta-pos">FAÇA PARTE</a>
+</section>
+
+<section id="quem-somos" class="section4">
+    <div class="section-row">
+        <h2 class="section-title">Quem Somos</h2>
+        <div class="section-box">
+            <p>
+                O Vértice Hub é um espaço colaborativo que conecta empreendedores, startups e empresas em busca de inovação e crescimento.
+            Nosso propósito é impulsionar negócios através de networking, mentorias e acesso a recursos estratégicos.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section id="onde-estamos" class="section2">
+    <div class="section-row">
+        <h2 class="section-title">Onde Estamos</h2>
+        <div class="section-box">
+            <p>
+                Localizados no coração da cidade, oferecemos uma infraestrutura moderna e inspiradora, fácil acesso e ambiente seguro para você e seu negócio prosperarem.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section id="o-que-fazemos" class="section section3">
+    <div class="section-row">
+        <h2 class="section-title">O Que Fazemos</h2>
+        <div class="section-box">
+            <ul>
+            <li>Espaços de coworking flexíveis e equipados</li>
+            <li>Programas de aceleração de startups</li>
+            <li>Mentorias com especialistas do mercado</li>
+            <li>Eventos, workshops e networking</li>
+            <li>Ambiente colaborativo e inovador</li>
+        </ul>
+        </div>
+    </div>
+    <div class="cta-bottom-free">
+        <a href="{{ url_for('cadastro_empresa') }}" class="cta-btn cta-btn-bottom">FAÇA PARTE DESSA HISTÓRIA</a>
+    </div>
+</section>
+{% endblock %}

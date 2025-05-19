@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Vértice Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <a href="{{ url_for('index') }}" id="logo-btn" class="logo-container">
+                <img src="static/imagens/logo.png" alt="Logo" class="logo-img logo" />
+            </a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}#quem-somos">Quem Somos</a></li>
+                <li><a href="{{ url_for('index') }}#onde-estamos">Onde Estamos</a></li>
+                <li><a href="{{ url_for('index') }}#o-que-fazemos">O Que Fazemos</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; {{ 2025 }} Vértice Hub. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='js/main.js') }}">
+
+    </script>
+</body>
+</html>

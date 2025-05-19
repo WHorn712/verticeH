@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">Cadastro da Empresa</h2>
+        <div class="section-box">
+            <form id="form-cadastro-empresa" class="form-cadastro-empresa" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <div class="form-group">
+                    <input type="file" id="foto" name="foto" accept="image/*" class="dynamic-input" style="display: none;">
+                    <label for="foto" id="foto-preview">FOTO     /        LOGO</label>
+                </div>
+                <div class="form-group">
+                    <label for="nome_empresa">Nome da Empresa *</label>
+                    <input type="text" id="nome_empresa" placeholder="Nome da Empresa" name="nome_empresa" required>
+                </div>
+                <div class="form-group">
+                    <label for="cnpj">CNPJ *</label>
+                    <input type="text" id="cnpj" name="cnpj" placeholder="Digite o CNPJ da Empresa" maxlength="18" required autocomplete="off" inputmode="numeric" pattern="\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}">
+                </div>
+                <div class="form-group">
+                    <label for="endereco">Endereço da Sede *</label>
+                    <input type="text" id="endereco" placeholder="Endereço da Sede" name="endereco" required>
+                </div>
+                <div class="form-group dynamic-group" id="cnae-group" data-label="CNAE" data-placeholder="Digite o CNAE" data-type="text" data-name="cnae[]">
+                    <label>CNAE *</label>
+                    <div class="dynamic-wrapper">
+                        <input type="text" name="cnae[]" placeholder="Ex: 62.010-1/00" class="dynamic-input cnae-input" required autocomplete="off">
+                        <button type="button" class="add-dynamic-btn" title="Adicionar CNAE">+</button>
+                    </div>
+                </div>
+                <div class="form-group dynamic-group" id="web-group" data-label="Página Web ou Rede Social" data-placeholder="https://exemplo.com ou https://instagram.com/exemplo" data-type="url" data-name="pagina_web[]">
+                    <label>Página Web ou Rede Social</label>
+                    <div class="dynamic-wrapper">
+                        <input type="url" name="pagina_web[]" placeholder="https://exemplo.com" class="dynamic-input web-input">
+                        <button type="button" class="add-dynamic-btn" title="Adicionar link">+</button>
+                    </div>
+                </div>
+                <div class="form-group dynamic-group" id="ramo-group" data-label="Ramos de Atuação" data-placeholder="Ex: Tecnologia, Saúde, Educação..." data-type="text" data-name="ramos_atuacao[]">
+                    <label>Ramos de Atuação *</label>
+                    <div class="dynamic-wrapper">
+                        <input type="text" name="ramos_atuacao[]" placeholder="Ex: Tecnologia, Saúde, Educação..." class="dynamic-input" required>
+                        <button type="button" class="add-dynamic-btn" title="Adicionar ramo">+</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="celular">Celular Principal *</label>
+                    <input type="tel" id="celular" name="celular" placeholder="Celular Principal da Empresa" required pattern="$$?\d{2}$$?\s?\d{4,5}-?\d{4}">
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail principal *</label>
+                    <input type="tel" id="email" name="email" placeholder="E-mail Principal da Empresa" required>
+                </div>
+                <div class="form-group dynamic-group" id="usuario-group" data-label="Usuário" data-placeholder="" data-type="text" data-name="usuario[]">
+                    <label>Usuários *</label>
+                    <div class="usuario-wrapper">
+                        <div class="usuario-fields">
+                            <input type="text" name="nome[]" placeholder="Nome do Usuário" class="dynamic-input" required>
+                            <input type="email" name="email[]" placeholder="E-mail do Usuário" class="dynamic-input" required>
+                            <input type="tel" id="celular2" name="celular[]" placeholder="Celular do Usuário" class="dynamic-input" required>
+                        </div>
+                        <button type="button" class="add-usuario-btn" title="Adicionar usuário">+</button>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="cta-btn">CADASTRAR</button>
+                </div>
+            </form>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+<h2 class="section-title">Serviços Oferecidos</h2>
+<div class="service-container" id="service-container-1">
+    <button class="add-dynamic-btn2">+</button>
+    <button class="remove-dynamic-btn2" style="display: none;">-</button>
+    <div class="service-box">
+        <div class="service-box-top"></div>
+        <div class="service-box-bottom">ADICIONAR +</div>
+    </div>
+</div>
+<br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+<h2 class="section-title">Combos de Serviços</h2>
+<div class="service-container" id="service-container-2">
+    <button class="add-dynamic-btn2">+</button>
+    <button class="remove-dynamic-btn2" style="display: none;">-</button>
+    <div class="service-box">
+        <div class="service-box-top"></div>
+        <div class="service-box-bottom">ADICIONAR +</div>
+    </div>
+</div>
+    </div>
+</section>
+
+<div id="photoModal" style="display:none;">
+    <div class="modal-content">
+        <button id="closeModal" class="close-btn">×</button>
+        <div class="image-container">
+            <img id="movableImage" src="" alt="Imagem para mover">
+        </div>
+        <button id="applyChanges" class="apply-btn">Mudar</button>
+    </div>
+</div>
+
+<div id="cadastro_servico" class="modal" style="display: none;">
+    <div class="modal-content">
+        <button class="close-btn" id="closeModal2">×</button>
+        <form id="form-cadastro-servico" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" id="foto-servico" name="foto-servico" accept="image/*" style="display: none;">
+                <label for="foto-servico" id="foto-servico-preview" class="foto-label">Clique para adicionar foto</label>
+            </div>
+            <div class="form-group">
+                <label for="nome_servico">Nome do Serviço *</label>
+                <input type="text" id="nome_servico" name="nome_servico" placeholder="Nome do Serviço" required>
+            </div>
+            <div class="form-group">
+                <label for="descricao_servico">O que o serviço oferece *</label>
+                <textarea id="descricao_servico" name="descricao_servico" placeholder="Descrição do Serviço" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="preco_normal">Preço Normal *</label>
+                <input type="text" id="preco_normal" name="preco_normal" placeholder="Preço Normal" required>
+            </div>
+            <div class="form-group">
+                <label for="preco_comunidade">Preço para a Comunidade *</label>
+                <input type="text" id="preco_comunidade" name="preco_comunidade" placeholder="Preço para a Comunidade" required>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="cta-btn-bottom">Adicionar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const fotoInput = document.getElementById('foto');
+    const fotoPreview = document.getElementById('foto-preview');
+
+    fotoInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                fotoPreview.innerHTML = ''; // Remove o texto
+                fotoPreview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+});
+</script>
+{% endblock %}
