@@ -195,7 +195,7 @@ def cadastro_empresa():
                 )
                 db.session.add(novo_servico)
 
-            max_index = -1
+            max_index = 0
             # Itera pelas chaves no dicionário request.form
             for key in request.form.keys():
                 # Tenta encontrar o padrão 'servicos[número]['
@@ -205,11 +205,7 @@ def cadastro_empresa():
                     index = int(match.group(1))
                     # Atualiza o índice máximo encontrado
                     max_index = max(max_index, index)
-
-            # O número total de serviços é o índice máximo + 1 (porque os índices começam em 0)
             num_servicos = max_index + 1 if max_index >= 0 else 0
-
-            # Agora você pode iterar pelo número correto de serviços
             for index in range(num_servicos):
                 # Use o índice para construir as chaves corretas e obter os dados
                 nome = request.form.get(f'servicos[{index}][nome]')
