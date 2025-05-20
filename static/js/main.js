@@ -742,8 +742,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             // Verificar se pelo menos um serviço está cadastrado
-            const servicos = document.querySelectorAll('.service-box');
-            const peloMenosUmServico = servicos.length > 0;
+            const servicos = document.querySelectorAll('.service-box-bottom');
+            const peloMenosUmServico = Array.from(servicos).some(service => service.textContent.trim() !== 'ADICIONAR +');
 
             if (!todosPreenchidos) {
                 formEmpresa.reportValidity();
@@ -757,6 +757,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Criar um FormData com os dados do formulário
             const formData = new FormData(formEmpresa);
+
+            // Adicionar dados dos serviços ao FormData
+            servicos.forEach((service, index) => {
+                const nomeServico = service.textContent.trim();
+                if (nomeServico) {
+                    formData.append(`servicos[${index}][nome]`, nomeServico);
+                    // Adicione outros campos do serviço aqui, se necessário
+                    // Exemplo: formData.append(`servicos[${index}][descricao]`, descricaoServico);
+                }
+            });
 
             // Enviar os dados via AJAX
             fetch('/cadastro-empresa', {
