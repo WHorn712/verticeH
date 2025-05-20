@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
 from urllib.parse import urlparse
+import re
 
 app = Flask(__name__)
 
@@ -182,7 +183,52 @@ def cadastro_empresa():
                     )
                     db.session.add(novo_usuario)
 
-            db.session.commit()
+            servicos = request.form.getlist('servicos[]')
+
+            for index, servico in enumerate(servicos):
+                novo_servico = Servico(
+                    empresa_id=nova_empresa.id,
+                    nome_servico=servicos[index]['nome'],
+                    descricao_servico=servicos[index]['descricao'],
+                    preco_normal=servicos[index]['precoNormal'],
+                    preco_comunidade=servicos[index]['precoComunidade']
+                )
+                db.session.add(novo_servico)
+
+            max_index = -1
+            # Itera pelas chaves no dicionário request.form
+            for key in request.form.keys():
+                # Tenta encontrar o padrão 'servicos[número]['
+                match = re.match(r'servicos$$(\d+)$$$$', key)
+                if match:
+                    # Se encontrar, extrai o número dentro dos colchetes
+                    index = int(match.group(1))
+                    # Atualiza o índice máximo encontrado
+                    max_index = max(max_index, index)
+
+            # O número total de serviços é o índice máximo + 1 (porque os índices começam em 0)
+            num_servicos = max_index + 1 if max_index >= 0 else 0
+
+            # Agora você pode iterar pelo número correto de serviços
+            for index in range(num_servicos):
+                # Use o índice para construir as chaves corretas e obter os dados
+                nome = request.form.get(f'servicos[{index}][nome]')
+                descricao = request.form.get(f'servicos[{index}][descricao]')
+                preco_normal = request.form.get(f'servicos[{index}][precoNormal]')
+                preco_comunidade = request.form.get(f'servicos[{index}][precoComunidade]')
+
+                # Verifique se pelo menos o nome existe para garantir que é um serviço válido (opcional, dependendo da sua lógica)
+                if nome:
+                    novo_servico = Servico(
+                        empresa_id=nova_empresa.id,  # Certifique-se que 'nova_empresa' está disponível neste escopo
+                        nome_servico=nome,
+                        descricao_servico=descricao,
+                        preco_normal=preco_normal,
+                        preco_comunidade=preco_comunidade
+                    )
+                    db.session.add(novo_servico)
+
+            db.session.commit()  # Salve todas as alterações no banco de dados
 
             flash('Empresa cadastrada com sucesso!', 'success')
             return redirect(url_for('obrigado', empresa_id=nova_empresa.id))

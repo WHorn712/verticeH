@@ -760,11 +760,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Adicionar dados dos serviços ao FormData
             servicos.forEach((service, index) => {
-                const nomeServico = service.textContent.trim();
+                const nomeServico = document.getElementById('nome_servico').value.trim();
+                const descricaoServico = document.getElementById('descricao_servico').value.trim();
+                const precoNormal = document.getElementById('preco_normal').value.trim();
+                const precoComunidade = document.getElementById('preco_comunidade').value.trim();
                 if (nomeServico) {
                     formData.append(`servicos[${index}][nome]`, nomeServico);
-                    // Adicione outros campos do serviço aqui, se necessário
-                    // Exemplo: formData.append(`servicos[${index}][descricao]`, descricaoServico);
+                    formData.append(`servicos[${index}][descricao]`, descricaoServico);
+                    formData.append(`servicos[${index}][precoNormal]`, precoNormal);
+                    formData.append(`servicos[${index}][precoComunidade]`, precoComunidade);
                 }
             });
 
