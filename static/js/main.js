@@ -781,8 +781,9 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 // Sucesso no cadastro
                 alert('Empresa cadastrada com sucesso!');
+                var empresaIdD = 13;
                 // Redirecionar ou atualizar a página conforme necessário
-                window.location.href = '/';
+                window.location.href = '/obrigado/' + empresaIdD;
             })
             .catch(error => {
                 console.error('Erro:', error);

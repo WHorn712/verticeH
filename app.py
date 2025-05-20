@@ -227,6 +227,7 @@ def cadastro_empresa():
             db.session.commit()  # Salve todas as alterações no banco de dados
 
             flash('Empresa cadastrada com sucesso!', 'success')
+            print("")
             return redirect(url_for('obrigado', empresa_id=nova_empresa.id))
 
         except Exception as e:
@@ -345,10 +346,36 @@ def carregar_dados_banco():
     print("FIM DOS DADOS DO BANCO DE DADOS")
     print("=" * 50 + "\n")
 
+
+@app.route('/excluir_todos', methods=['GET', 'POST'])
+def excluir_todos():
+    try:
+        # Excluir todas as entradas de cada tabela
+        Servico.query.delete()
+        Usuario.query.delete()
+        CNAE.query.delete()
+        PaginaWeb.query.delete()
+        RamoAtuacao.query.delete()
+        Empresa.query.delete()
+
+        # Confirmar transação no banco de dados
+        db.session.commit()
+
+        flash('Todos os dados foram excluídos com sucesso!', 'success')
+        print("PERFEITO")
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Erro ao excluir dados: {str(e)}', 'error')
+
+    # Redirecionar para a página inicial
+    return redirect(url_for('index'))
+
+
 if __name__ == '__main__':
     with app.app_context():
         # Carregar dados do banco ao iniciar a aplicação
         carregar_dados_banco()
+        #excluir_todos()
     app.run(debug=True)
 
 #if __name__ == '__main__':
