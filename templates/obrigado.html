@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obrigado!</title>
+</head>
+<body>
+    <h1>Obrigado por se cadastrar!</h1>
+    <h2>Dados da Empresa Cadastrada</h2>
+    <ul>
+        <li><strong>Nome da Empresa:</strong> {{ empresa.nome_empresa }}</li>
+        <li><strong>CNPJ:</strong> {{ empresa.cnpj }}</li>
+        <li><strong>Endereço:</strong> {{ empresa.endereco }}</li>
+        <li><strong>Celular:</strong> {{ empresa.celular }}</li>
+        <li><strong>Email:</strong> {{ empresa.email }}</li>
+        {% if empresa.foto_path %}
+        <li><strong>Foto:</strong> <img src="{{ url_for('static', filename=empresa.foto_path) }}" alt="Foto da Empresa"></li>
+        {% endif %}
+    </ul>
+    <a href="{{ url_for('index') }}">Voltar para a página inicial</a>
+</body>
+</html>

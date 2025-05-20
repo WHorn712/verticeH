@@ -713,3 +713,67 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const formEmpresa = document.getElementById('form-cadastro-empresa');
+
+    if (formEmpresa) {
+        formEmpresa.addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            // Verificar se todos os campos obrigatórios estão preenchidos
+            const camposObrigatorios = [
+                'nome_empresa',
+                'cnpj',
+                'endereco',
+                'celular',
+                'email'
+            ];
+
+            let todosPreenchidos = true;
+            camposObrigatorios.forEach(function(campo) {
+                const input = formEmpresa.elements[campo];
+                if (!input || input.value.trim() === '') {
+                    todosPreenchidos = false;
+                    input.classList.add('campo-obrigatorio'); // Adiciona uma classe para destacar o campo
+                } else {
+                    input.classList.remove('campo-obrigatorio');
+                }
+            });
+
+            // Verificar se pelo menos um serviço está cadastrado
+            const servicos = document.querySelectorAll('.service-box');
+            const peloMenosUmServico = servicos.length > 0;
+
+            if (!todosPreenchidos) {
+                formEmpresa.reportValidity();
+                return;
+            }
+
+            if (!peloMenosUmServico) {
+                alert('Por favor, cadastre pelo menos um serviço.');
+                return;
+            }
+
+            // Criar um FormData com os dados do formulário
+            const formData = new FormData(formEmpresa);
+
+            // Enviar os dados via AJAX
+            fetch('/cadastro-empresa', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Sucesso no cadastro
+                alert('Empresa cadastrada com sucesso!');
+                // Redirecionar ou atualizar a página conforme necessário
+                window.location.href = '/';
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Ocorreu um erro ao processar o cadastro.');
+            });
+        });
+    }
+});
