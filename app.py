@@ -108,11 +108,20 @@ def obrigado(empresa_id):
     empresa = Empresa.query.get_or_404(empresa_id)
     return render_template('obrigado.html', empresa=empresa)
 
+@app.route('/api/empresas/ids', methods=['GET'])
+def get_empresa_ids():
+    try:
+        ids = [empresa.id for empresa in Empresa.query.all()]
+        return {'ids': ids}, 200
+    except Exception as e:
+        return {'erro': str(e)}, 500
+
 @app.route('/cadastro-empresa', methods=['GET', 'POST'])
 def cadastro_empresa():
     if request.method == 'POST':
         try:
             # Obter dados do formulário
+            id_atual = request.form['id_atual']
             nome_empresa = request.form['nome_empresa']
             cnpj = request.form['cnpj']
             endereco = request.form['endereco']
@@ -137,6 +146,7 @@ def cadastro_empresa():
 
             # Criar nova empresa
             nova_empresa = Empresa(
+                id=id_atual,
                 nome_empresa=nome_empresa,
                 cnpj=cnpj,
                 endereco=endereco,

@@ -772,6 +772,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
+            let idAtual = 1
+
+            fetch('/api/empresas/ids')
+            .then(response => response.json())
+            .then(data => {
+                if (data.ids) {
+                    console.log('IDs das empresas:', data.ids);
+                    while (data.ids.includes(idAtual)) {
+                        idAtual += 1;
+                    }
+                    // Aqui você pode usar os IDs conforme necessário
+                } else {
+                    console.error('Erro ao obter IDs das empresas:', data.erro);
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao fazer requisição:', error);
+            });
+
+            formData.append('id_atual', idAtual);
+
             // Enviar os dados via AJAX
             fetch('/cadastro-empresa', {
                 method: 'POST',
@@ -781,9 +802,9 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 // Sucesso no cadastro
                 alert('Empresa cadastrada com sucesso!');
-                var empresaIdD = 13;
+                var empresaIdD = idAtual;
                 // Redirecionar ou atualizar a página conforme necessário
-                window.location.href = '/obrigado/' + empresaIdD;
+                window.location.href = '/obrigado/' + idAtual;
             })
             .catch(error => {
                 console.error('Erro:', error);
