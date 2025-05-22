@@ -14,10 +14,14 @@
             <a href="{{ url_for('index') }}" id="logo-btn" class="logo-container">
                 <img src="static/imagens/logo.png" alt="Logo" class="logo-img logo" />
             </a>
+            <div class="search-container">
+                <input type="text" placeholder="Pesquisar..." class="search-input">
+            </div>
             <ul class="nav-links">
                 <li><a href="{{ url_for('index') }}#quem-somos">Quem Somos</a></li>
                 <li><a href="{{ url_for('index') }}#onde-estamos">Onde Estamos</a></li>
                 <li><a href="{{ url_for('index') }}#o-que-fazemos">O Que Fazemos</a></li>
+                <li><a href="{{ url_for('logged') }}" class="entry_logged">Entrar</a></li>
             </ul>
         </div>
     </nav>

@@ -62,6 +62,55 @@ header {
     margin-right: 0; /* Remove espaçamento extra */
 }
 
+.search-container {
+    position: relative;
+    margin-right: 20px; /* Ajuste conforme necessário */
+}
+
+.search-input {
+    width: 250px; /* Largura da barra de pesquisa */
+    padding: 8px 12px;
+    border: 1px solid var(--gray-light);
+    border-radius: 20px;
+    font-size: 1rem;
+    transition: width 0.3s ease;
+    background-color: var(--white);
+    color: var(--petrol-dark);
+    visibility: hidden;
+}
+
+.search-input:focus {
+    width: 300px; /* Expande a largura ao focar */
+    outline: none;
+    border-color: var(--caramel);
+}
+
+@media (max-width: 700px) {
+    .search-input {
+        width: 100%; /* Ajusta para telas menores */
+    }
+}
+
+.icon {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 5px;
+    text-align: center;
+    transform: translateX(-6px);
+}
+
+.icon-1x1::before {
+    content: '👥'; /* Ícone para "1 x 1" */
+}
+
+.icon-notifications::before {
+    content: '🔔'; /* Ícone para "Notificações" */
+}
+
+.icon-messages::before {
+    content: '✉️'; /* Ícone para "Mensagens" */
+}
+
 .nav-links {
     list-style: none;
     display: flex;
@@ -83,6 +132,43 @@ header {
 .nav-links a:hover {
     color: var(--caramel);
     background: var(--yellow-soft);
+}
+
+.entry_logged {
+    visibility: visible;
+}
+
+.logged-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logged-layout .nav-links {
+    display: flex;
+    gap: 40px;
+    margin: 0;
+    padding: 0;
+    transform: translate(-10px, -12px); /* Move para a esquerda e para cima */
+}
+
+.logged-layout .nav-links a {
+    color: var(--black);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+    font-size: 1rem;
+    padding: 8px 12px;
+    border-radius: 18px;
+}
+
+.logged-layout .nav-links a:hover {
+    color: var(--caramel);
+    background: var(--yellow-soft);
+}
+
+.logged-layout .nav-links li:last-child {
+    margin-top: 10px; /* Baixa o botão "Entrar" */
 }
 
 .cta-btn {
@@ -204,7 +290,7 @@ body {
 /* Seção com layout em linha */
 .section {
     background: var(--gray-light);
-    padding: 200px 0;
+    padding: 20px 0;
     border-bottom: 1px solid #e0e0e0;
 }
 
@@ -1048,4 +1134,68 @@ body {
 
 .cta-btn-bottom:hover {
     background: var(--brown-dark);
+}
+
+.profile {
+    background: var(--box-bg);
+    box-shadow: var(--box-shadow);
+    border-radius: 18px;
+    padding: 24px;
+    margin-up: 0px;
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.profile-logo {
+    width: 100px;
+    height: auto;
+    margin-bottom: 16px;
+}
+
+.profile-name {
+    font-family: 'Montserrat', Arial, sans-serif;
+    color: var(--petrol);
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.profile-description {
+    color: #404040;
+    font-size: 1rem;
+    text-align: left;
+}
+
+.companies-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.company-card {
+    background: var(--box-bg);
+    box-shadow: var(--box-shadow);
+    border-radius: 18px;
+    padding: 16px;
+    text-align: center;
+    width: calc(33.333% - 20px);
+    box-sizing: border-box;
+}
+
+.company-logo {
+    width: 80px;
+    height: auto;
+    border-radius: 50%;
+    margin-bottom: 12px;
+}
+
+.company-name {
+    font-family: 'Montserrat', Arial, sans-serif;
+    color: var(--petrol);
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+}
+
+.company-description {
+    color: var(--petrol-dark);
+    font-size: 0.9rem;
 }

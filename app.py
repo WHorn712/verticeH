@@ -33,6 +33,7 @@ class Empresa(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nome_empresa = db.Column(db.String(255), nullable=False)
+    sobre_empresa = db.Column(db.String(255), nullable=False)
     cnpj = db.Column(db.String(18), nullable=False)
     endereco = db.Column(db.Text, nullable=False)
     celular = db.Column(db.String(20), nullable=False)
@@ -103,6 +104,10 @@ def allowed_file(filename):
 def index():
     return render_template('index.html')
 
+@app.route('/logged')
+def logged():
+    return render_template('logged.html')
+
 @app.route('/obrigado/<int:empresa_id>')
 def obrigado(empresa_id):
     empresa = Empresa.query.get_or_404(empresa_id)
@@ -116,6 +121,24 @@ def get_empresa_ids():
     except Exception as e:
         return {'erro': str(e)}, 500
 
+@app.route('/api/empresa/<int:empresa_id>', methods=['GET'])
+def get_empresa(empresa_id):
+    try:
+        empresa = Empresa.query.get_or_404(empresa_id)
+        empresa_data = {
+            'nome_empresa': empresa.nome_empresa,
+            'sobre_empresa': empresa.sobre_empresa,
+            'cnpj': empresa.cnpj,
+            'endereco': empresa.endereco,
+            'celular': empresa.celular,
+            'email': empresa.email,
+            'foto_path': empresa.foto_path,
+            'ramos_atuacao': [ramo.ramo for ramo in empresa.ramos_atuacao]
+        }
+        return empresa_data, 200
+    except Exception as e:
+        return {'erro': str(e)}, 500
+
 @app.route('/cadastro-empresa', methods=['GET', 'POST'])
 def cadastro_empresa():
     if request.method == 'POST':
@@ -123,6 +146,7 @@ def cadastro_empresa():
             # Obter dados do formulário
             id_atual = request.form['id_atual']
             nome_empresa = request.form['nome_empresa']
+            sobre_empresa = request.form['sobre_empresa']
             cnpj = request.form['cnpj']
             endereco = request.form['endereco']
             celular = request.form['celular']
@@ -148,6 +172,7 @@ def cadastro_empresa():
             nova_empresa = Empresa(
                 id=id_atual,
                 nome_empresa=nome_empresa,
+                sobre_empresa=sobre_empresa,
                 cnpj=cnpj,
                 endereco=endereco,
                 celular=celular,
@@ -308,6 +333,7 @@ def carregar_dados_banco():
     for empresa in empresas:
         print(f"\nEmpresa ID: {empresa.id}")
         print(f"Nome: {empresa.nome_empresa}")
+        print(f"Nome: {empresa.sobre_empresa}")
         print(f"CNPJ: {empresa.cnpj}")
         print(f"Endereço: {empresa.endereco}")
         print(f"Celular: {empresa.celular}")

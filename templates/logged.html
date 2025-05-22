@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+
+        <!-- Perfil da Empresa -->
+        <div class="profile">
+            <div class="profile-header">
+                <img src="/static/imagens/teste.png" alt="Logo Empresa" class="profile-logo">
+                <h3 class="profile-name">Nome da Empresa (ID: 1)</h3>
+                <p class="profile-description">Descrição breve da empresa...</p>
+                <p class="profile-description">Ramos de atuação...</p>
+                <p class="profile-description">E-mail</p>
+                <p class="profile-description">Celular</p>
+            </div>
+        </div>
+        <div class="companies-list">
+            <h3>Empresas Cadastradas</h3>
+            <div class="company-card">
+                <img src="/static/imagens/logo_empresa2.png" alt="Logo Empresa" class="company-logo">
+                <h4 class="company-name">Nome da Empresa 2</h4>
+                <p class="company-description">Descrição breve da empresa...</p>
+            </div>
+            <div class="company-card">
+                <img src="/static/imagens/logo_empresa3.png" alt="Logo Empresa" class="company-logo">
+                <h4 class="company-name">Nome da Empresa 3</h4>
+                <p class="company-description">Descrição breve da empresa...</p>
+            </div>
+            <!-- Adicione mais empresas conforme necessário -->
+        </div>
+    </div>
+</section>
+{% endblock %}

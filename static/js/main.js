@@ -724,6 +724,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Verificar se todos os campos obrigatórios estão preenchidos
             const camposObrigatorios = [
                 'nome_empresa',
+                'sobre_empresa',
                 'cnpj',
                 'endereco',
                 'celular',
@@ -811,5 +812,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Ocorreu um erro ao processar o cadastro.');
             });
         });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/empresa/1')
+        .then(response => response.json())
+        .then(data => {
+            document.querySelector('.profile-logo').src = data.foto_path || '/static/imagens/teste.png';
+            document.querySelector('.profile-name').textContent = data.nome_empresa;
+            document.querySelector('.profile-description:nth-of-type(1)').textContent = data.sobre_empresa;
+            document.querySelector('.profile-description:nth-of-type(2)').textContent = `Ramos de Atuação: ${data.ramos_atuacao.join(', ')}`;
+            document.querySelector('.profile-description:nth-of-type(3)').textContent = `Email: ${data.email}`;
+            document.querySelector('.profile-description:nth-of-type(4)').textContent = `Celular: ${data.celular}`;
+        })
+        .catch(error => console.error('Erro ao carregar dados da empresa:', error));
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("Caminho atual:", window.location.pathname); // Log do caminho atual
+
+    // Verifica se o arquivo atual é '/logged'
+    if (window.location.pathname.includes('/logged')) {
+        console.log("Página /logged detectada");
+
+        // Torna a barra de pesquisa visível
+        document.querySelector('.search-input').style.visibility = 'visible';
+        document.querySelector('.entry_logged').style.visibility = 'hidden';
+
+        // Altera os textos dos elementos
+        const navLinks = document.querySelectorAll('.nav-links li a');
+        if (navLinks.length >= 3) {
+            navLinks[0].innerHTML = '<span class="icon icon-1x1"></span>1 x 1';
+            navLinks[1].innerHTML = '<span class="icon icon-notifications"></span>Notificações';
+            navLinks[2].innerHTML = '<span class="icon icon-messages"></span>Mensagens';
+
+            navLinks[0].addEventListener('click', function(event) {
+                event.preventDefault();
+            });
+            navLinks[1].addEventListener('click', function(event) {
+                event.preventDefault();
+            });
+            navLinks[2].addEventListener('click', function(event) {
+                event.preventDefault();
+            });
+        }
+        document.querySelector('.navbar-content').classList.add('logged-layout');
+    } else {
+        console.log("Outra página detectada");
+        // Garante que a barra de pesquisa esteja invisível em outras páginas
+        document.querySelector('.search-input').style.visibility = 'hidden';
+
+        const navLinks = document.querySelectorAll('.nav-links li a');
+        if (navLinks.length >= 3) {
+            navLinks[0].innerHTML = 'Quem Somos';
+            navLinks[1].innerHTML = 'Onde Estamos';
+            navLinks[2].innerHTML = 'O Que Fazemos';
+        }
+        document.querySelector('.navbar-content').classList.remove('logged-layout');
     }
 });
