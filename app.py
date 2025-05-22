@@ -6,6 +6,7 @@ import os
 from datetime import datetime
 from urllib.parse import urlparse
 import re
+from sqlalchemy.orm import joinedload
 
 app = Flask(__name__)
 
@@ -47,14 +48,12 @@ class Empresa(db.Model):
     usuarios = db.relationship('Usuario', backref='empresa', lazy=True, cascade="all, delete-orphan")
     servicos = db.relationship('Servico', backref='empresa', lazy=True, cascade="all, delete-orphan")
 
-
 class CNAE(db.Model):
     __tablename__ = 'cnae'
 
     id = db.Column(db.Integer, primary_key=True)
     empresa_id = db.Column(db.Integer, db.ForeignKey('cadastro_empresa.id'), nullable=False)
     cnae = db.Column(db.String(20), nullable=False)
-
 
 class PaginaWeb(db.Model):
     __tablename__ = 'pagina_web'
@@ -63,14 +62,12 @@ class PaginaWeb(db.Model):
     empresa_id = db.Column(db.Integer, db.ForeignKey('cadastro_empresa.id'), nullable=False)
     url = db.Column(db.String(255), nullable=False)
 
-
 class RamoAtuacao(db.Model):
     __tablename__ = 'ramo_atuacao'
 
     id = db.Column(db.Integer, primary_key=True)
     empresa_id = db.Column(db.Integer, db.ForeignKey('cadastro_empresa.id'), nullable=False)
     ramo = db.Column(db.String(255), nullable=False)
-
 
 class Usuario(db.Model):
     __tablename__ = 'usuario'
@@ -80,7 +77,6 @@ class Usuario(db.Model):
     nome = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     celular = db.Column(db.String(20), nullable=False)
-
 
 class Servico(db.Model):
     __tablename__ = 'servico'
@@ -93,7 +89,6 @@ class Servico(db.Model):
     preco_comunidade = db.Column(db.Numeric(10, 2), nullable=False)
     foto_path = db.Column(db.String(255))
     data_cadastro = db.Column(db.DateTime, default=datetime.utcnow)
-
 
 # Função para verificar extensões permitidas
 def allowed_file(filename):
@@ -121,6 +116,31 @@ def get_empresa_ids():
     except Exception as e:
         return {'erro': str(e)}, 500
 
+# Rota para buscar todas as empresas
+@app.route('/api/empresas', methods=['GET'])
+def get_all_empresas():
+    try:
+        empresas = Empresa.query.all()
+        empresas_data = []
+
+        for empresa in empresas:
+            empresa_data = {
+                'id': empresa.id,  # Incluindo o ID para referência
+                'nome_empresa': empresa.nome_empresa,
+                'sobre_empresa': empresa.sobre_empresa,
+                'cnpj': empresa.cnpj,
+                'endereco': empresa.endereco,
+                'celular': empresa.celular,
+                'email': empresa.email,
+                'foto_path': empresa.foto_path,
+                'ramos_atuacao': [ramo.ramo for ramo in empresa.ramos_atuacao]
+            }
+            empresas_data.append(empresa_data)
+
+        return {'empresas': empresas_data}, 200
+    except Exception as e:
+        return {'erro': str(e)}, 500
+
 @app.route('/api/empresa/<int:empresa_id>', methods=['GET'])
 def get_empresa(empresa_id):
     try:
@@ -136,6 +156,105 @@ def get_empresa(empresa_id):
             'ramos_atuacao': [ramo.ramo for ramo in empresa.ramos_atuacao]
         }
         return empresa_data, 200
+    except Exception as e:
+        return {'erro': str(e)}, 500
+
+@app.route('/api/empresas', methods=['GET'])
+def get_all_empresas():
+    try:
+        # Parâmetros de paginação e filtragem
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 10, type=int)
+        nome = request.args.get('nome')
+        ramo = request.args.get('ramo')
+        cnae = request.args.get('cnae')
+
+        # Iniciar a consulta
+        query = Empresa.query
+
+        # Aplicar filtros se fornecidos
+        if nome:
+            query = query.filter(Empresa.nome_empresa.ilike(f'%{nome}%'))
+        if ramo:
+            query = query.join(Empresa.ramos_atuacao, aliased=True).filter(RamoAtuacao.ramo.ilike(f'%{ramo}%'))
+        if cnae:
+            query = query.join(Empresa.cnaes, aliased=True).filter(CNAE.cnae == cnae)
+
+        # Adicionar carregamento de relacionamentos e aplicar paginação
+        pagination = query.options(
+            joinedload(Empresa.cnaes),
+            joinedload(Empresa.paginas_web),
+            joinedload(Empresa.ramos_atuacao),
+            joinedload(Empresa.usuarios),
+            joinedload(Empresa.servicos)
+        ).paginate(page=page, per_page=per_page, error_out=False)
+
+        empresas = pagination.items
+        empresas_data = []
+
+        for empresa in empresas:
+            empresa_data = {
+                'id': empresa.id,
+                'nome_empresa': empresa.nome_empresa,
+                'sobre_empresa': empresa.sobre_empresa,
+                'cnpj': empresa.cnpj,
+                'endereco': empresa.endereco,
+                'celular': empresa.celular,
+                'email': empresa.email,
+                'foto_path': empresa.foto_path,
+
+                'cnaes': [
+                    {
+                        'id': cnae.id,
+                        'cnae': cnae.cnae
+                    } for cnae in empresa.cnaes
+                ],
+
+                'paginas_web': [
+                    {
+                        'id': pagina.id,
+                        'url': pagina.url
+                    } for pagina in empresa.paginas_web
+                ],
+
+                'ramos_atuacao': [
+                    {
+                        'id': ramo.id,
+                        'ramo': ramo.ramo
+                    } for ramo in empresa.ramos_atuacao
+                ],
+
+                'usuarios': [
+                    {
+                        'id': usuario.id,
+                        'nome': usuario.nome,
+                        'email': usuario.email,
+                        'celular': usuario.celular
+                    } for usuario in empresa.usuarios
+                ],
+
+                'servicos': [
+                    {
+                        'id': servico.id,
+                        'nome_servico': servico.nome_servico,
+                        'descricao_servico': servico.descricao_servico,
+                        'preco_normal': float(servico.preco_normal),
+                        'preco_comunidade': float(servico.preco_comunidade),
+                        'foto_path': servico.foto_path,
+                        'data_cadastro': servico.data_cadastro.isoformat() if servico.data_cadastro else None
+                    } for servico in empresa.servicos
+                ]
+            }
+
+            empresas_data.append(empresa_data)
+
+        return {
+            'empresas': empresas_data,
+            'total': pagination.total,
+            'pages': pagination.pages,
+            'current_page': page,
+            'per_page': per_page
+        }, 200
     except Exception as e:
         return {'erro': str(e)}, 500
 
@@ -271,7 +390,6 @@ def cadastro_empresa():
 
     return render_template('cadastro_empresa.html')
 
-
 @app.route('/cadastro-servico', methods=['GET', 'POST'])
 def cadastro_servico():
     if request.method == 'POST':
@@ -316,7 +434,6 @@ def cadastro_servico():
             return redirect(url_for('cadastro_servico'))
 
     return render_template('cadastro_servico.html')
-
 
 def carregar_dados_banco():
     """
@@ -381,7 +498,6 @@ def carregar_dados_banco():
     print("\n" + "=" * 50)
     print("FIM DOS DADOS DO BANCO DE DADOS")
     print("=" * 50 + "\n")
-
 
 @app.route('/excluir_todos', methods=['GET', 'POST'])
 def excluir_todos():
